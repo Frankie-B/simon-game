@@ -37,8 +37,6 @@ function checkAnswer(currentLevel) {
       }, 1000);
     }
   } else {
-    console.log('Wrong!');
-
     playSound('wrong');
     // Changing the title for game over
     $('body').addClass('game-over');
@@ -46,7 +44,15 @@ function checkAnswer(currentLevel) {
       $('body').removeClass('game-over');
     }, 200);
     $('#level-title').text('Game Over, Press Any Key To Restart');
+    startOver();
   }
+}
+
+// Resetting the game after a wrong answer
+function startOver() {
+  level = 0;
+  gamePattern = [];
+  started = false;
 }
 
 function nextSequence() {
