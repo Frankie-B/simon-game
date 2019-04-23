@@ -22,6 +22,7 @@ $('.btn').click(function() {
 
   playSound(userChosenColour);
   animatePress(userChosenColour);
+
   checkAnswer(userClickedPattern.length - 1);
 });
 
@@ -37,6 +38,14 @@ function checkAnswer(currentLevel) {
     }
   } else {
     console.log('Wrong!');
+
+    playSound('wrong');
+    // Changing the title for game over
+    $('body').addClass('game-over');
+    setTimeout(function() {
+      $('body').removeClass('game-over');
+    }, 200);
+    $('#level-title').text('Game Over, Press Any Key To Restart');
   }
 }
 
@@ -63,7 +72,6 @@ function nextSequence() {
 }
 
 // Playing Sound
-
 function playSound(name) {
   var audio = new Audio('sounds/' + name + '.mp3');
   audio.play();
@@ -77,5 +85,3 @@ function animatePress(currentColour) {
     $('#' + currentColour).removeClass('pressed');
   }, 100);
 }
-
-nextSequence();
