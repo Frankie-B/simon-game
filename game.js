@@ -1,20 +1,19 @@
 var buttonColours = ['red', 'blue', 'green', 'yellow'];
+
 var gamePattern = [];
 var userClickedPattern = [];
 
-// Starting the game
 var started = false;
 var level = 0;
 
-$(document).keydown(function() {
+// Game start
+$(document).keypress(function() {
   if (!started) {
     $('#level-title').text('Level ' + level);
     nextSequence();
     started = true;
   }
 });
-
-// Detecting user clicked buttons
 
 $('.btn').click(function() {
   var userChosenColour = $(this).attr('id');
@@ -26,11 +25,9 @@ $('.btn').click(function() {
   checkAnswer(userClickedPattern.length - 1);
 });
 
-// Checking the users answer
+// Checking the players answer against the game
 function checkAnswer(currentLevel) {
   if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
-    console.log('Success!');
-
     if (userClickedPattern.length === gamePattern.length) {
       setTimeout(function() {
         nextSequence();
@@ -38,56 +35,50 @@ function checkAnswer(currentLevel) {
     }
   } else {
     playSound('wrong');
-    // Changing the title for game over
     $('body').addClass('game-over');
+    $('#level-title').text('Game Over, Press Any Key to Restart');
+
     setTimeout(function() {
       $('body').removeClass('game-over');
     }, 200);
-    $('#level-title').text('Game Over, Press Any Key To Restart');
+
     startOver();
   }
 }
 
-// Resetting the game after a wrong answer
-function startOver() {
-  level = 0;
-  gamePattern = [];
-  started = false;
-}
-
+// Pattern Sequence Generation
 function nextSequence() {
-  // Reset userClickedPattern
   userClickedPattern = [];
-  // increasing user level
   level++;
-  // Updating the Level title
-  $('#level-title').text('level ' + level);
-
-  // Random number generating function for patterns.
+  $('#level-title').text('Level ' + level);
   var randomNumber = Math.floor(Math.random() * 4);
   var randomChosenColour = buttonColours[randomNumber];
   gamePattern.push(randomChosenColour);
 
-  // Animation for buttons
   $('#' + randomChosenColour)
     .fadeIn(100)
     .fadeOut(100)
     .fadeIn(100);
-
   playSound(randomChosenColour);
 }
 
-// Playing Sound
+// Background animation on press
+function animatePress(currentColor) {
+  $('#' + currentColor).addClass('pressed');
+  setTimeout(function() {
+    $('#' + currentColor).removeClass('pressed');
+  }, 100);
+}
+
+// Playing soundsof buttons
 function playSound(name) {
   var audio = new Audio('sounds/' + name + '.mp3');
   audio.play();
 }
 
-// Background animation for buttons
-function animatePress(currentColour) {
-  $('#' + currentColour).addClass('pressed');
-
-  setTimeout(function() {
-    $('#' + currentColour).removeClass('pressed');
-  }, 100);
+// Resetting game
+function startOver() {
+  level = 0;
+  gamePattern = [];
+  started = false;
 }
